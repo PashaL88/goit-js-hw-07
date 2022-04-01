@@ -20,12 +20,25 @@ const array = galleryItems.map((image) => {
 
 galleryEL.insertAdjacentHTML("beforeend", array.join(""));
 
+let instance;
+
 const onSelectImageClick = (event) => {
+  event.preventDefault();
   const target = event.target;
-  if (target.nodeName !== "IMG") {
-    return;
-  }
-  console.log("клик");
+  if (target.nodeName !== "IMG") return;
+
+  instance = basicLightbox.create(`
+    <img src="${target.dataset.source}">
+`);
+
+  instance.show();
+  window.addEventListener("keydown", instanceCloseEscPress);
 };
 
 galleryEL.addEventListener("click", onSelectImageClick);
+
+function instanceCloseEscPress(event) {
+  if (event.code === "Escape") {
+    instance.close();
+  }
+}
